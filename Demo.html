@@ -47,6 +47,11 @@
 				};
 				document.getElementById("InputSyrup").onkeyup = function(e)
 				{
+					parseInput(this);
+				};
+				
+				function parseInput(inputElem)
+				{
 					var http = new XMLHttpRequest();
 					http.onreadystatechange = function() {
 						if (http.readyState === 4){
@@ -81,16 +86,15 @@
 							
 						}
 					};
-					updateCursorPositionInidcator(this);
-					var postVars = "ParseText="+this.value+"&CursorPosition="+this.selectionStart;
+					updateCursorPositionInidcator(inputElem);
+					var postVars = "ParseText="+inputElem.value+"&CursorPosition="+inputElem.selectionStart;
 					http.open('POST', 'index.php', true);
 					http.setRequestHeader('X-Requested-With', 'XMLHttpRequest'); 
 					http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 					http.setRequestHeader("Content-length", postVars.length);
 					http.setRequestHeader("Connection", "close");
 					http.send(postVars);
-				};
-				
+				}
 				function updateCursorPositionInidcator(textAreaElement)
 				{
 					var textUpToCursor = textAreaElement.value.substr(0, textAreaElement.selectionStart);
@@ -113,6 +117,7 @@
 					document.getElementById("CursorPosition2").innerHTML=charPosLine.toString();
 				}
 				
+				parseInput(document.getElementById("InputSyrup"));
 			};
 			
 		</script>
@@ -121,7 +126,32 @@
 		<div>
 			<div style="width: 50%; float: left;">
 				<h1>Type some valid SyRuP here</h1>
-				<textarea id="InputSyrup" style="width: 100%; height: 500px;overflow: auto;"></textarea>
+				<textarea id="InputSyrup" style="width: 100%; height: 500px;overflow: auto;">
+SectionHeading1
+	SubSectionHeading1
+		Value	Value	Value	Value
+		Value	Value	Value	Value
+
+	SubSectionHeading2
+		Setting1
+			Value
+		Setting2
+			Value
+SectionHeading2
+	Setting1	=	Value
+	Setting2	=	Value
+	Setting3	=	Value
+
+SectionHeading3
+
+	SubSectionHeading3
+		Setting1
+			Value	Value	Value
+			Value	Value	Value
+		Setting2
+			Value	Value	Value
+			Value	Value	Value					
+				</textarea>
 				<div style="width: 100%;">
 					<div style="width: 50%; float: left;">
 						Client Cursor <b><span id="CursorLine2"></span>:<span id="CursorPosition2"></span></b>
