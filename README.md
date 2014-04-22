@@ -4,14 +4,6 @@ SyRuP Parser
 A parser for SyRuP.
 Converts valid SyRuP into a PHP array.
 
-Note:
-about how consecutive spaces work
-escaping
-quotes and block quotes
-would like ot be able to tab alogn block qquotes and have it parse as a steady string
-found a bug when doing a vertical list and having a horizontal list as one of its members
-sequences of {${ and }$} and the contents therin will be removed
-
 SyRuP File
 -----------
 
