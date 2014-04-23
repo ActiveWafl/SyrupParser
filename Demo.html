@@ -59,6 +59,7 @@
 							if (responseObject.hasOwnProperty("ParsedResult"))
 							{
 								document.getElementById("ParsedResult").innerHTML=responseObject["ParsedResult"];
+								document.getElementById("ParsedResultJSON").innerHTML=responseObject["ParsedResultJSON"];								
 								document.getElementById("CursorDepth").innerHTML=responseObject["CursorDepth"];
 								document.getElementById("CursorLine").innerHTML=responseObject["CursorLine"];
 								document.getElementById("CursorPosition").innerHTML=responseObject["CursorPosition"];
@@ -124,7 +125,7 @@
 	</head>
 	<body>
 		<div>
-			<div style="width: 50%; float: left;">
+			<div style="width: 33%; float: left;">
 				<h1>Type some valid SyRuP here</h1>
 				<textarea id="InputSyrup" style="width: 100%; height: 500px;overflow: auto;">
 SectionHeading1
@@ -164,7 +165,7 @@ SectionHeading3
 					<div style="clear: both;"></div>
 				</div>
 			</div>
-			<div style="width: 50%; float: left;">
+			<div style="width: 33%; float: left;">
 				<h1>Parsed Result (PHP Array)</h1>
 				<div id="ParsedResult" style="border: solid 1px #999999; width: 100%; height: 500px;overflow: auto;"></div>
 				<div>
@@ -172,6 +173,10 @@ SectionHeading3
 					HDepth <span id="HeadingDepth3"></span>, CDepth: <span id="CursorDepth3"></span><br>
 					Elem: <span id="ParserCurrentElementName2"></span>
 				</div>
+			</div>
+			<div style="width: 33%; float: left;">
+				<h1>Parsed Result (JSON)</h1>
+				<div id="ParsedResultJSON" style="border: solid 1px #999999; width: 100%; height: 500px;overflow: auto;"></div>
 			</div>
 			<div style="clear: both;"></div>
 		</div>

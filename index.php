@@ -17,8 +17,8 @@ if ($parseText)
 		} else {
 			$parseResultUptoCursor = $parseResult;
 		}
-
-		$resultString = print_r($parseResult->Get_ResultArray(),true);
+		$resultArray = $parseResult->Get_ResultArray();
+		$resultString = print_r($resultArray,true);
 		require_once("phar://".__DIR__."/GeSHi.phar/geshi.php");
 		$geshi = new GeSHi($resultString, "php", null);
 		$geshi->set_header_type(\GESHI_HEADER_NONE);
@@ -27,9 +27,18 @@ if ($parseText)
 			throw new \Exception("Error while highlighting code: ".$geshi->error(), E_WARNING, $ex);
 		}
 		
+		$geshi = new GeSHi(json_encode($resultArray,JSON_PRETTY_PRINT), "javascript", null);
+		$geshi->set_header_type(\GESHI_HEADER_NONE);
+		$resultStringJson = '<code class="javascript">' . $geshi->parse_code() . '</code>';
+		if ($geshi->error()) {
+			throw new \Exception("Error while highlighting code: ".$geshi->error(), E_WARNING, $ex);
+		}
+	
+		
 		//this is an "ajax" call, return the parsed text
 		$returnData = array(
 			"ParsedResult"		=> $resultString,
+			"ParsedResultJSON"  => $resultStringJson,
 			"CursorDepth"		=> $parseResultUptoCursor->Get_EndingCursorDepth(),
 			"CursorLine"		=> $parseResultUptoCursor->Get_EndingCursorLine(),
 			"CursorPosition"	=> $parseResultUptoCursor->Get_EndingCursorPosition(),
