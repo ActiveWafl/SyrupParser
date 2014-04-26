@@ -125,9 +125,9 @@ class Parser {
 	 * @return array
 	 */
 	private function _removeUnnecessaryNesting($array, $recursive = true, $useKey = null) {
-		if (count($array) == 1 && (is_array(reset($array))) && key($array) === 0) { //we test the key for zero to ensure this is a setting and not a headding.  But what if someone uses 0 as a heading?  Maybe we should reserve it
-			$array = $this->_removeUnnecessaryNesting(reset($array));
-		}
+//		if (count($array) == 1 && (is_array(reset($array))) && key($array) === 0) { //we test the key for zero to ensure this is a setting and not a headding.  But what if someone uses 0 as a heading?  Maybe we should reserve it
+//			$array = $this->_removeUnnecessaryNesting(reset($array));
+//		}
 
 		$resultArray = array();
 		foreach ($array as $elemKey => &$element) {
