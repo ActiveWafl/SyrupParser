@@ -1,5 +1,6 @@
 SyRuP Parser
 ===========
+0.0.2
 
 A parser for SyRuP.
 Converts valid SyRuP into a PHP array.
@@ -11,7 +12,7 @@ SyRuP File
 **S**tructured **R**eadable **P**arseable
 
 SyRuP files are easy to read configuration files, very similar to .ini files.
-The primary difference between .syrp files and .ini files is that SyRuP files offer better support for lists and hierarchical information.
+The primary difference between .syrp files and .ini files is that SyRuP files offer better support for lists and hierarchical information of infinite depth.
 
 SyRuP is pronounced "sirrup"
 
