@@ -32,7 +32,7 @@ try {
 	if ($syrpContents)
 	{
 		require_once (__DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "Bootstrapper.php");
-		$parser = new DblEj\Parsing\Syrup\Parser($syrpContents);
+		$parser = new Wafl\Syrup\Parser($syrpContents);
 		$parseResult = $parser->Parse();
 		$finalResult=null;
 		switch ($outputFormat)
