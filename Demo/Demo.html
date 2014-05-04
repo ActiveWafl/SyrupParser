@@ -1,0 +1,220 @@
+<html>
+	<head>
+		<title>SyRuP File Demonstration</title>
+		<script type="text/javascript">
+			window.onload = function()
+			{
+				document.getElementById("InputSyrup").onkeydown = function(e)
+				{
+					var keyCode = e.keyCode || e.which; 
+				
+					if (keyCode === 9) {
+						var start = this.selectionStart;
+						var end = this.selectionEnd;
+						var value = this.value;
+						if (!e.shiftKey)
+						{
+							// set textarea value to: text before caret + tab + text after caret
+							this.value = value.substring(0, start)
+										+ "\t"
+										+ value.substring(end);
+
+							var cursorPos = start + 1;
+							this.selectionStart = cursorPos;
+							this.selectionEnd = cursorPos;						
+						} else {
+							if (start > 0)
+							{
+								if (value.substring(start-1,start) == "\t")
+								{
+									this.value = value.substring(0, start-1) + value.substring(end);
+								} else {
+									var lastEol = value.substring(0, start-1).lastIndexOf("\n");
+									var firstTabOnLine = value.substring(0, start-1).indexOf("\t");
+									var currentLine = value.substring(lastEol+1, start-1);
+									if (firstTabOnLine > lastEol && (currentLine.substring(0, 1) == "\t"))
+									{
+										this.value = value.substring(0, firstTabOnLine) + value.substring(firstTabOnLine+1);
+									}
+								}
+								var cursorPos = start - 1;
+								this.selectionStart = cursorPos;
+								this.selectionEnd = cursorPos;						
+							}
+						}
+						e.preventDefault(); 
+					}
+				};
+				document.getElementById("InputSyrup").onkeyup = function(e)
+				{
+					parseInput(this);
+				};
+				
+				function parseInput(inputElem)
+				{
+					var http = new XMLHttpRequest();
+					http.onreadystatechange = function() {
+						if (http.readyState === 4){
+							var responseObject = JSON.parse(http.responseText);
+							if (responseObject.hasOwnProperty("ParsedResult"))
+							{
+								document.getElementById("ParsedResult").innerHTML=responseObject["ParsedResult"];
+								document.getElementById("ParsedResultJSON").innerHTML=responseObject["ParsedResultJSON"];								
+								document.getElementById("CursorDepth").innerHTML=responseObject["CursorDepth"];
+								document.getElementById("CursorLine").innerHTML=responseObject["CursorLine"];
+								document.getElementById("CursorPosition").innerHTML=responseObject["CursorPosition"];
+								document.getElementById("HeadingDepth").innerHTML=responseObject["HeadingDepth"];
+								
+								document.getElementById("CursorDepth3").innerHTML=responseObject["ParserDepth"];
+								document.getElementById("CursorLine3").innerHTML=responseObject["ParserLine"];
+								document.getElementById("CursorPosition3").innerHTML=responseObject["ParserPosition"];
+								document.getElementById("HeadingDepth3").innerHTML=responseObject["ParserHeadingDepth"];
+								document.getElementById("ParserCurrentElementName").innerHTML=responseObject["CursorCurrentElement"];
+								document.getElementById("ParserCurrentElementName2").innerHTML=responseObject["ParserCurrentElement"];
+							} else {
+								document.getElementById("CursorDepth").innerHTML="0";
+								document.getElementById("CursorLine").innerHTML="0";
+								document.getElementById("CursorPosition").innerHTML="0";
+								document.getElementById("HeadingDepth").innerHTML="0";
+								
+								document.getElementById("ParsedResult").innerHTML = responseObject["Message"];
+								document.getElementById("CursorDepth3").innerHTML=responseObject["ParserDepth"];
+								document.getElementById("CursorLine3").innerHTML=responseObject["ParserLine"];
+								document.getElementById("CursorPosition3").innerHTML=responseObject["ParserPosition"];
+								document.getElementById("HeadingDepth3").innerHTML=responseObject["ParserHeadingDepth"];
+								document.getElementById("ParserCurrentElementName").innerHTML=responseObject["CurrentElement"];
+							}
+							
+						}
+					};
+					updateCursorPositionInidcator(inputElem);
+					var postVars = "ParseText="+inputElem.value+"&CursorPosition="+inputElem.selectionStart;
+					http.open('POST', 'index.php', true);
+					http.setRequestHeader('X-Requested-With', 'XMLHttpRequest'); 
+					http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+					http.setRequestHeader("Content-length", postVars.length);
+					http.setRequestHeader("Connection", "close");
+					http.send(postVars);
+				}
+				function updateCursorPositionInidcator(textAreaElement)
+				{
+					var textUpToCursor = textAreaElement.value.substr(0, textAreaElement.selectionStart);
+					var textLinesUpToCursor = textUpToCursor.split("\n");
+					var currentLineNumber = textLinesUpToCursor.length;
+					var currentLine=null;
+					var charPosOverall=null;
+					var charPosLine=null;
+					var lastEolPos=null;
+					var depth=null;
+					
+					if (currentLineNumber > 0)
+					{
+						currentLine = textLinesUpToCursor[currentLineNumber-1];
+					}
+					lastEolPos = textUpToCursor.lastIndexOf("\n");
+					charPosOverall = textAreaElement.selectionStart;
+					charPosLine = textAreaElement.selectionStart-lastEolPos-1;
+					document.getElementById("CursorLine2").innerHTML=currentLineNumber.toString();
+					document.getElementById("CursorPosition2").innerHTML=charPosLine.toString();
+				}
+				
+				parseInput(document.getElementById("InputSyrup"));
+			};
+			
+		</script>
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>		<style>
+			body h3, div
+			{
+				color: #333333;
+				font-family: 'Open Sans', sans-serif;
+			}
+			a, a:hover
+			{
+				text-decoration: none;
+				color: #3344af;
+			}
+		</style>
+	</head>
+	<body>
+
+
+		<h2 style="text-align: center;">
+		<b>S</b>y<b>R</b>u<b>P</b> = <b><i>S</i>tructured</b> <span style="text-decoration: line-through; color: #666666;">y</span> <b><i>R</i>eadable</b> <span style="color: #666666;text-decoration: line-through; ">u</span> <b><i>P</i>arseable</b>
+		</h2>
+
+		<p>SyRuP files are easy to read configuration files, very similar to .ini files.&ensp;
+		The primary difference between .syrp files and .ini files is that SyRuP files offer better support for lists and hierarchical information of infinite depth.&ensp;
+		If you ever needed to create sub-sections or sub-sub-sections in your .ini files, then Syrup files are for you.&ensp;
+		Syrup files also provide vertical and horizontal lists, nested to n-depth, all while remaining human-readable.&ensp;
+		Syrup doesn't use ugly tokens or markup to notate it's structure.&ensp;Everything is naturally read based on tab-depth, just like a human brain sees it.</p>
+		<p>
+			<b>Recommended</b><br>
+			Mime Type: text/x-syrp<br>
+			File Extension: .syrp<br>
+		</p>
+<a href="https://github.com/ActiveWafl/SyrupParser" target="_blank">Parser and details available @ Github</a>
+
+<!--Syrup files are used by <a href="http://activewafl.com">The ActiveWAFL Framework</a></li>
+	<li>by <a href="http://wafl.org">Wafl.org</a></li>
+-->
+		
+		
+		
+		<div>
+			<div style="width: 50%; float: left;">
+				<h3>Type some valid SyRuP here</h3>
+				<textarea id="InputSyrup" style="width: 100%; height: 500px;overflow: auto;">
+SectionHeading1
+	SubSectionHeading1
+		Value	Value	Value	Value
+		Value	Value	Value	Value
+
+	SubSectionHeading2
+		Setting1
+			Value
+		Setting2
+			Value
+SectionHeading2
+	Setting1	=	Value
+	Setting2	=	Value
+	Setting3	=	Value
+
+SectionHeading3
+
+	SubSectionHeading3
+		Setting1
+			Value	Value	Value
+			Value	Value	Value
+		Setting2
+			Value	Value	Value
+			Value	Value	Value					
+				</textarea>
+				<div style="width: 100%;">
+					<div style="width: 50%; float: left;">
+						Client Cursor <b><span id="CursorLine2"></span>:<span id="CursorPosition2"></span></b>
+					</div>
+					<div style="width: 50%; float: left;">
+						Parser Cursor <b><span id="CursorLine"></span>:<span id="CursorPosition"></span></b><br>
+						HDepth <span id="HeadingDepth"></span>, CDepth: <span id="CursorDepth"></span><br>
+						Elem: <span id="ParserCurrentElementName"></span>
+					</div>
+					<div style="clear: both;"></div>
+				</div>
+			</div>
+			<div style="width: 50%; float: left;" id="PhpResult">
+				<h3>Parsed Result: PHP Array | <a href="" onclick="document.getElementById('JsonResult').style.display='block'; document.getElementById('PhpResult').style.display='none'; return false;" style="font-size: 75%;">JSON Object</a></h3>
+				<div id="ParsedResult" style="border: solid 1px #999999; width: 100%; height: 500px;overflow: auto;"></div>
+				<div>
+					Parser Exit <b><span id="CursorLine3"></span>:<span id="CursorPosition3"></span></b><br>
+					HDepth <span id="HeadingDepth3"></span>, CDepth: <span id="CursorDepth3"></span><br>
+					Elem: <span id="ParserCurrentElementName2"></span>
+				</div>
+			</div>
+			<div style="width: 50%; float: left; display: none;"  id="JsonResult">
+				<h3>Parsed Result: <a href="" onclick="document.getElementById('PhpResult').style.display='block';document.getElementById('JsonResult').style.display='none'; return false;" style="font-size: 75%;">PHP Array</a> | JSON Object</h3>
+				<div id="ParsedResultJSON" style="border: solid 1px #999999; width: 100%; height: 500px;overflow: auto;"></div>
+			</div>
+			<div style="clear: both;"></div>
+		</div>
+	</body>
+</html>
