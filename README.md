@@ -32,6 +32,11 @@ Downloads
 + [Syrup 16 pixel icon (.gif)](http://syrupfile.org/Downloads/Icons/text-x-syrp-16.gif)
 + [Syrup 48 pixel icon (.gif)](http://syrupfile.org/Downloads/Icons/text-x-syrp-48.gif)
 
+Command line parser notes
+------------------
++ command-line parser is written in php and requires php to run
++ to run just type: php syrup.phar
+
 Demonstration
 -------------
 http://syrupfile.org/
