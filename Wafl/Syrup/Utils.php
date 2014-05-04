@@ -32,5 +32,11 @@ class Utils {
 		}
 		return self::ParseString(file_get_contents($filename),$encoding);
 	}
+	
+	public static function ParseFileAsArray($filename)
+	{
+		$result = self::ParseFile($filename);
+		return $result->Get_ResultArray();
+	}
 }
 ?>
