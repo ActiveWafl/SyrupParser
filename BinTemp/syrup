@@ -1,0 +1,127 @@
+#!/bin/php
+<?php
+try {
+	$inputFile		 = null;
+	$outputFormat	 = "json";
+
+	if ($argc > 1) {
+		if ($argv[1] == "--help" || $argv[1] == "-h") {
+			printUsageMessage();
+			exit(0);
+		}
+		else if ($argv[1]=="php" || $argv[1]=="xml" || $argv[1]=="json") {
+			$outputFormat = $argv[1];
+			if ($argc > 2) {
+				$inputFile = $argv[2];
+			}
+		}
+		else {
+			$inputFile = $argv[1];
+		}
+	} else {
+		printUsageMessage();
+		exit(0);
+	}
+
+	if ($inputFile) {
+		if (!file_exists($inputFile)) {
+			throw new Exception("Invalid input file specified.  File \"$inputFile\" does not exist.");
+		}
+		$syrpContents = file_get_contents($inputFile);
+	}
+	else {
+		$syrpContents = getAllUserInput(true);
+	}
+	if ($syrpContents)
+	{
+		require_once (__DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "Autoloader.php");
+		$parser = new Wafl\Syrup\Parser($syrpContents);
+		$parseResult = $parser->Parse();
+		$finalResult=null;
+		switch ($outputFormat)
+		{
+			case "php":
+				$finalResult = serialize($parseResult->Get_ResultArray());
+				break;
+			case "xml":
+				$xml = new SimpleXMLElement("<?xml version=\"1.0\"?><syrup></syrup>");
+				array_to_xml($parseResult->Get_ResultArray(),$xml);
+				$finalResult = $xml->asXML();
+				break;
+			case "json":
+				$finalResult = json_encode($parseResult->Get_ResultArray());
+				break;
+		}
+		if ($finalResult)
+		{
+			print $finalResult;
+		} else {
+			throw new Exception("Invalid or blank syrup");
+		}
+	} else {
+		throw new Exception("No syrup was sent to the parser");
+	}
+	exit(0);
+}
+catch (Exception $ex) {
+	fputs(STDERR, $ex->getMessage(), strlen($ex->getMessage()));
+	exit(1);
+}
+
+
+
+
+
+// function defination to convert array to xml
+function array_to_xml($student_info, &$xml_student_info) {
+    foreach($student_info as $key => $value) {
+        if(is_array($value)) {
+            if(!is_numeric($key)){
+                $subnode = $xml_student_info->addChild("$key");
+                array_to_xml($value, $subnode);
+            }
+            else{
+                $subnode = $xml_student_info->addChild("item$key");
+                array_to_xml($value, $subnode);
+            }
+        }
+        else {
+            $xml_student_info->addChild("$key",htmlspecialchars("$value"));
+        }
+    }
+}
+
+function printUsageMessage() {
+	print "Usage: syrup php|xml|json [syrpfile]\n";
+	print "If syrpfile is not supplied, syrup will read the syrp from stdin.\n";
+}
+
+function getUserInput() {
+	$handle	 = fopen("php://stdin", "r");
+	$input	 = "";
+	$input .= trim(fgets($handle), "\n\r");
+	fclose($handle);
+	return $input;
+}
+
+function getAllUserInput($block=true) {
+	$input="";
+	if ($block)
+	{
+		while (!feof(STDIN)) {
+			$input .= fgets(STDIN);
+		}
+	} else {
+		$read = array(STDIN);
+		$write = array();
+		$except = array();
+		$result = stream_select($read, $write, $except, 0);
+		if($result === false) throw new Exception('stream_select failed');
+		if($result === 0) return false;
+		$input .= stream_get_line(STDIN, 1);
+	}
+
+	return $input;
+}
+
+?>
