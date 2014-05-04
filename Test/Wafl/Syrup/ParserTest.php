@@ -36,7 +36,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     public function testParse()
     {
         $this->assertEquals(
-          \DblEj\Tests\ExpectedResults\Syrp::GetExpectedTest1Output()
+          "test123"
 ,
           $this->object->Parse()
         );
