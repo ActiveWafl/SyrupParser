@@ -3,7 +3,8 @@
 try {
 	$inputFile		 = null;
 	$outputFormat	 = "json";
-
+	$versionString	= "0.0.3";
+	
 	if ($argc > 1) {
 		if ($argv[1] == "--help" || $argv[1] == "-h") {
 			printUsageMessage();
@@ -35,7 +36,7 @@ try {
 	if ($syrpContents)
 	{
 		require_once (__DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "Autoloader.php");
-		$parser = new Wafl\Syrup\Parser($syrpContents);
+		$parser = new \Wafl\Syrup\Parser($syrpContents);
 		$parseResult = $parser->Parse();
 		$finalResult=null;
 		switch ($outputFormat)
@@ -92,7 +93,7 @@ function array_to_xml($student_info, &$xml_student_info) {
 }
 
 function printUsageMessage() {
-	print "Usage: syrup php|xml|json [syrpfile]\n";
+	print "Syrup $versionString\nUsage: syrup php|xml|json [syrpfile]\n";
 	print "If syrpfile is not supplied, syrup will read the syrp from stdin.\n";
 }
 
