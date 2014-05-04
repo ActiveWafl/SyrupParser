@@ -108,7 +108,7 @@
             <arg path="${basedir}/Output/CodeBrowser" />
         </exec>
     </target>
-    <target name="DeployToTestServer" description="Deploy the phar to test">
+    <target name="DeployLatestVersion" description="Deploy the phar to test">
         <exec executable="php">
             <arg value="GeneratePhar.php" />
             <arg value="syrup" />
@@ -121,7 +121,7 @@
         </copy>
         <copy file="/var/www/vhosts/shared/bin/syrup.phar" tofile="/var/www/vhosts/activewafl.com/syrupfile.org/Public/Downloads/syrup.latest.phar" />  
     </target>
-    <target name="DeployToProductionServer" description="Deploy the phar generated at test">
+    <target name="PromoteLatestVersionToStable" description="Deploy the phar generated at test">
         <copy file="/var/www/vhosts/activewafl.com/syrupfile.org/Public/Downloads/syrup.latest.phar" tofile="/var/www/vhosts/activewafl.com/syrupfile.org/Public/Downloads/syrup.phar" />  
 	</target>
 </project>
