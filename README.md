@@ -24,6 +24,11 @@ SyRuP *files* are referred to as
 SyRuP *data* is referred to simply as 
 **SyRuP** or **Syrup**
 
+Downloads
+-------------
++ [Syrup Command-line Parser (stable)](http://syrupfile.org/Downloads/syrup.phar)
++ [Syrup Command-line Parser (latest)](http://syrupfile.org/Downloads/syrup.latest.phar)
+
 Demonstration
 -------------
 http://syrupfile.org/
