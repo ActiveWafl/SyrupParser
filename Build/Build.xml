@@ -9,7 +9,7 @@
     <property environment="env"/>
     
     <target name="Build"
-            depends="PrepareBuild,CheckPhpSyntax,MeasureProjectSize,CalculatePhpCodeQuality,DetectPhpMesses,ValidatePhpCodingStandard,DetectDuplicatePhpCode,GeneratePhpDocumentation,RunDatabaseUpdates,RunUnitTests,AggregateBuildReports"/>
+            depends="PrepareBuild,CheckPhpSyntax,MeasureProjectSize,CalculatePhpCodeQuality,DetectPhpMesses,ValidatePhpCodingStandard,DetectDuplicatePhpCode,GeneratePhpDocumentation,RunUnitTests,AggregateBuildReports"/>
     <target name="Clean" description="Cleanup build artifacts">
         <echo message="Deleting workspace folders from previous build..."/>
         <delete dir="${basedir}/../dist-src"/>
@@ -18,7 +18,7 @@
 		
     </target>
 
-    <target name="PrepareBuild" depends="Clean,GetLatestActiveWafl" description="Prepare for the build">
+    <target name="PrepareBuild" depends="Clean" description="Prepare for the build">
         <echo message="Creating workspace folders needed for build..."/>
         <mkdir dir="${basedir}/../dist-src"/>
         <mkdir dir="${basedir}/../dist"/>
