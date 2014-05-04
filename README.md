@@ -24,6 +24,9 @@ SyRuP *files* are referred to as
 SyRuP *data* is referred to simply as 
 **SyRuP** or **Syrup**
 
+Demonstration
+-------------
+http://syrupfile.org/
 
 Background
 -----------
