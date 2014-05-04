@@ -1,0 +1,24 @@
+SectionHeading1
+	SubSectionHeading1
+		Value	Value	Value	Value
+		Value	Value	Value	Value
+
+	SubSectionHeading2
+		Setting1
+			Value
+		Setting2
+			Value
+SectionHeading2
+	Setting1	=	Value
+	Setting2	=	Value
+	Setting3	=	Value
+
+SectionHeading3
+
+	SubSectionHeading3
+		Setting1
+			Value	Value	Value
+			Value	Value	Value
+		Setting2
+			Value	Value	Value
+			Value	Value	Value					
