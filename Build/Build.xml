@@ -110,13 +110,13 @@
     </target>
     <target name="DeployLatestVersion" description="Deploy the phar to test">
         <exec executable="php">
-            <arg value="GeneratePhar.php" />
+            <arg value="GeneratePhar.phar" />
             <arg value="syrup" />
             <arg path="${basedir}/../dist-src/" />
             <arg path="${basedir}/../dist/" />
             <arg value="Bin/syrup" />
         </exec>
-        <copy todir="/var/www/vhosts/shared/bin" >  
+        <copy todir="/var/www/vhosts/shared/bin">  
             <fileset dir="${env.WORKSPACE}/syrup.phar" includes="**"/>  
         </copy>
         <copy file="/var/www/vhosts/shared/bin/syrup.phar" tofile="/var/www/vhosts/activewafl.com/syrupfile.org/Public/Downloads/syrup.latest.phar" />  
