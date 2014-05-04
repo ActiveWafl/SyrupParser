@@ -83,7 +83,7 @@
         </exec>
     </target>
     <target name="GeneratePhpDocumentation" description="Generate API documentation using phpDox"> 
-        <exec executable="phpdox"> 
+        <exec executable="phpdoc"> 
             <arg value="-f" /> 
             <arg value="${basedir}/PhpDox.xml" /> 
         </exec> 
