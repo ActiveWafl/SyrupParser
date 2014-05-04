@@ -1,6 +1,6 @@
 SyRuP Parser
 ===========
-0.0.2
+0.0.3
 
 A parser for SyRuP.
 Converts valid SyRuP into a PHP array.
