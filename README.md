@@ -28,6 +28,9 @@ Downloads
 -------------
 + [Syrup Command-line Parser (stable)](http://syrupfile.org/Downloads/syrup.phar)
 + [Syrup Command-line Parser (latest)](http://syrupfile.org/Downloads/syrup.latest.phar)
++ [Syrup 16 pixel icon (.ico)](http://syrupfile.org/Downloads/Icons/text-x-syrp.ico)
++ [Syrup 16 pixel icon (.gif)](http://syrupfile.org/Downloads/Icons/text-x-syrp-16.gif)
++ [Syrup 48 pixel icon (.gif)](http://syrupfile.org/Downloads/Icons/text-x-syrp-48.gif)
 
 Demonstration
 -------------
