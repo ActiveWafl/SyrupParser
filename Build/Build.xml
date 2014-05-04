@@ -20,15 +20,14 @@
     <target name="PrepareBuild" depends="Clean" description="Prepare for the build">
         <echo message="Creating workspace folders needed for build..."/>
         <mkdir dir="${basedir}/../dist-src"/>
-        <mkdir dir="${basedir}/../dist-src/Wafl"/>
         <mkdir dir="${basedir}/../dist"/>
         <mkdir dir="${basedir}/Output"/>
 		
         <echo message="Copying dist source files..."/>
-		<copy todir="${basedir}/../dist-src/Wafl/Syrup">
-			<fileset dir="{basedir}/../Wafl/Syrup"/>
+		<copy todir="${basedir}/../dist-src/Wafl">
+			<fileset dir="${basedir}/../Wafl"/>
 		</copy>	
-		<copy file="{basedir}/../Autoloader.php" todir="${basedir}/../dist-src"/>		
+		<copy file="${basedir}/../Autoloader.php" todir="${basedir}/../dist-src"/>		
     </target>
 
     <target name="CheckPhpSyntax" description="Perform syntax check of sourcecode files">
