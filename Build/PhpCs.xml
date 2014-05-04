@@ -1,0 +1,4 @@
+<ruleset name="ActiveWAFL">
+ <description>ActiveWAFL Coding Standard 0.1</description>
+ <rule ref="Generic.PHP.DisallowShortOpenTag"/>
+</ruleset>

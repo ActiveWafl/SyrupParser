@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project 
+    name="SyrupParser" 
+    default="Build"
+    xmlns:if="ant:if"
+    xmlns:unless="ant:unless"
+>
+    <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+    <property environment="env"/>
+    
+    <target name="Build"
+            depends="PrepareBuild,CheckPhpSyntax,MeasureProjectSize,CalculatePhpCodeQuality,DetectPhpMesses,ValidatePhpCodingStandard,DetectDuplicatePhpCode,GeneratePhpDocumentation,RunDatabaseUpdates,RunUnitTests,AggregateBuildReports"/>
+    <target name="Clean" description="Cleanup build artifacts">
+        <echo message="Deleting workspace folders from previous build..."/>
+        <delete dir="${basedir}/../dist-src"/>
+        <delete dir="${basedir}/../dist"/>
+        <delete dir="${basedir}/Output"/>
+		
+    </target>
+
+    <target name="PrepareBuild" depends="Clean,GetLatestActiveWafl" description="Prepare for the build">
+        <echo message="Creating workspace folders needed for build..."/>
+        <mkdir dir="${basedir}/../dist-src"/>
+        <mkdir dir="${basedir}/../dist"/>
+        <mkdir dir="${basedir}/Output"/>
+		
+        <echo message="Copying dist source files..."/>
+		<copy todir="${basedir}/../dist-src/Wafl">
+			<fileset dir="{basedir}/../Wafl"/>
+		</copy>	
+		<copy file="{basedir}/../Autoloader.php" todir="${basedir}/../dist-src"/>		
+    </target>
+
+    <target name="CheckPhpSyntax" description="Perform syntax check of sourcecode files">
+        <echo>Checking PHP syntax for modified files in ${basedir}/dist-src with php -l...</echo>
+        <apply executable="php" failonerror="true">
+            <arg value="-l" />
+            <fileset dir="${basedir}/../dist-src">
+                <include name="**/*.php" />
+                <modified />
+            </fileset>
+        </apply>
+    </target>
+
+    <target name="MeasureProjectSize" description="Measure project size using phploc">
+        <echo>Running phploc to get project size...</echo>
+        <exec executable="phploc">
+            <arg value="--log-csv" />
+            <arg path="${basedir}/../dist-src" />
+        </exec>
+    </target>
+
+    <target name="CalculatePhpCodeQuality" description="Calculate software metrics using PHP_Depend">
+        <exec executable="pdepend">
+            <arg value="--jdepend-xml=${basedir}/Output/AppMetrics.xml" />
+            <arg value="--jdepend-chart=${basedir}/Output/AppMetricsChart.svg" />
+            <arg value="--overview-pyramid=${basedir}/Output/OverviewPyramidChart.svg" />
+            <arg path="${basedir}/../dist-src" />
+        </exec>
+    </target>
+    <target name="DetectPhpMesses" description="Perform project mess detection using phpmd creating a log file for the continuous integration server">
+        <exec executable="phpmd">
+            <arg path="${basedir}/../dist-src" />
+            <arg value="xml" />
+            <arg path="${basedir}/PhpMd.xml" />
+            <arg value="--reportfile" />
+            <arg path="${basedir}/Output/MessDetectionLog.xml" />
+        </exec>
+    </target>
+    <target name="ValidatePhpCodingStandard" description="Find coding standard violations using PHP_CodeSniffer creating a log file for the continuous integration server">
+        <exec executable="phpcs" output="/dev/null">
+            <arg value="--report=checkstyle" />
+            <arg value="--report-file=${basedir}/Output/CodeStandardViolations.xml" />
+            <arg value="--standard=${basedir}/PhpCs.xml" />
+            <arg path="${basedir}/../dist-src" />
+        </exec>
+    </target>
+
+    <target name="DetectDuplicatePhpCode" description="Find duplicate code using phpcpd">
+        <exec executable="phpcpd">
+            <arg value="--log-pmd" />
+            <arg value="${basedir}/Output/DuplicateCodeReport.xml" />
+            <arg path="${basedir}/../dist-src" />
+        </exec>
+    </target>
+    <target name="GeneratePhpDocumentation" description="Generate API documentation using phpDox"> 
+        <exec executable="phpdox"> 
+            <arg value="-f" /> 
+            <arg value="${basedir}/PhpDox.xml" /> 
+        </exec> 
+    </target> 
+    <target name="RunUnitTests" description="Run unit tests with PHPUnit">
+        <echo message="Starting phpunit..." />
+        <apply executable="phpunit" parallel="true">
+            <env key="WAFL_ENVIRONMENT" value="build" />
+            <srcfile/>               
+            <arg line='--bootstrap="${basedir}/../Autoloader.php" --configuration=PhpUnit.xml' />
+            <fileset dir="${basedir}/../Test" includes="*.php"/>
+        </apply>        
+        <echo message="done" />
+    </target>
+    <target name="AggregateBuildReports" description="Aggregate tool output with PHP_CodeBrowser">
+        <exec executable="phpcb">
+            <arg value="--log" />
+            <arg path="${basedir}/Output" />
+            <arg value="--source" />
+            <arg path="${basedir}/../dist-src" />
+            <arg value="--output" />
+            <arg path="${basedir}/Output/CodeBrowser" />
+        </exec>
+    </target>
+    <target name="DeployToTestServer" description="Deploy the phar to test">
+        <exec executable="php">
+            <arg value="GeneratePhar.php" />
+            <arg value="syrup" />
+            <arg path="${basedir}/../dist-src/" />
+            <arg path="${basedir}/../dist/" />
+            <arg value="Bin/syrup" />
+        </exec>
+        <copy todir="/var/www/vhosts/shared/bin" >  
+            <fileset dir="${env.WORKSPACE}/syrup.phar" includes="**"/>  
+        </copy>
+        <copy file="/var/www/vhosts/shared/bin/syrup.phar" tofile="/var/www/vhosts/activewafl.com/syrupfile.org/Public/Downloads/syrup.latest.phar" />  
+    </target>
+    <target name="DeployToProductionServer" description="Deploy the phar generated at test">
+        <copy file="/var/www/vhosts/activewafl.com/syrupfile.org/Public/Downloads/syrup.latest.phar" tofile="/var/www/vhosts/activewafl.com/syrupfile.org/Public/Downloads/syrup.phar" />  
+	</target>
+</project>
