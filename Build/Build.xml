@@ -116,12 +116,11 @@
             <arg path="${basedir}/../dist/" />
             <arg value="Bin/syrup" />
         </exec>
-        <copy todir="/var/www/vhosts/shared/bin">  
-            <fileset dir="${env.WORKSPACE}/dist/syrup.phar" includes="**"/>  
-        </copy>
-        <copy file="/var/www/vhosts/shared/bin/syrup.phar" tofile="/var/www/vhosts/activewafl.com/syrupfile.org/Public/Downloads/syrup.latest.phar" />  
+        <copy file="${env.WORKSPACE}/dist/syrup.phar" tofile="/var/www/vhosts/shared/bin/syrup.latest.phar" />  
+        <copy file="${env.WORKSPACE}/dist/syrup.phar" tofile="/var/www/vhosts/activewafl.com/syrupfile.org/Public/Downloads/syrup.latest.phar" />  
     </target>
     <target name="PromoteLatestVersionToStable" description="Deploy the phar generated at test">
+        <copy file="/var/www/vhosts/shared/bin/syrup.latest.phar" tofile="/var/www/vhosts/shared/bin/syrup.phar" />  
         <copy file="/var/www/vhosts/activewafl.com/syrupfile.org/Public/Downloads/syrup.latest.phar" tofile="/var/www/vhosts/activewafl.com/syrupfile.org/Public/Downloads/syrup.phar" />  
 	</target>
 </project>
