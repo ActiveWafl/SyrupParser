@@ -117,7 +117,7 @@
             <arg value="Bin/syrup" />
         </exec>
         <copy todir="/var/www/vhosts/shared/bin">  
-            <fileset dir="${env.WORKSPACE}/syrup.phar" includes="**"/>  
+            <fileset dir="${env.WORKSPACE}/dist/syrup.phar" includes="**"/>  
         </copy>
         <copy file="/var/www/vhosts/shared/bin/syrup.phar" tofile="/var/www/vhosts/activewafl.com/syrupfile.org/Public/Downloads/syrup.latest.phar" />  
     </target>
