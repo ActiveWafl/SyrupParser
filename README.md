@@ -114,8 +114,8 @@ Definitions
 
 +    **Functional Indent**
 
-	In Syrup a tab character (or two consecutive spaces) is the delimiter between the Values in a Horizontal Value List (similar to CSV).
-	However, consecutive tab characters, (or consecutive consecutive spaces [ex: 4 spaces]) are 
+	In Syrup a tab character (or two or more consecutive spaces) is the delimiter between the Values in a Horizontal Value List (similar to CSV).
+	However, consecutive tab characters, (or any space following consecutive spaces [ex: 3 spaces]) are 
 	treated as if they are a single tab character.
 	This allows the Horizontal Value Lists to be lined up in a human readable row of cells.
 
