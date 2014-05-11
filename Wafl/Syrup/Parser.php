@@ -47,6 +47,7 @@ class Parser {
 	private $_inComment		 = false;
 	private $_inQuote		 = false;
 	private $_inSpace		 = false;
+	private $_inTab			 = false;
 	private $_encoding;
 	private $_currentElementString;
 
@@ -206,13 +207,20 @@ class Parser {
 				}
 
 				if ($evalChar != " " && $this->_inSpace) { //if they ended up using the space without doubling it then add the literal space
-					$this->_charBuffer .= " ";
+					if (!$this->_inTab) //dont add a space if there were several in a row as they are all considered a tab after the first one (and the first one is nullified)
+					{
+						$this->_charBuffer .= " ";
+					}
 					$this->_inSpace = false;
+				}
+				if ($evalChar != " " && $evalChar != "\t" && $this->_inTab)
+				{
+					$this->_inTab = false;
 				}
 				switch ($evalChar) {
 					case " ":
 						if ($this->_inSpace) {
-							$this->_inSpace = false;
+							//$this->_inSpace = false;
 							$this->_processTab();
 						}
 						else {
@@ -260,6 +268,7 @@ class Parser {
 	}
 
 	private function _processTab() {
+		$this->_inTab = true;
 		if (!$this->_charBuffer && ($this->_currentRowCellCt == 0)) {
 			$this->_currentDepth++;
 		}
