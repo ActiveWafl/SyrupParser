@@ -1,11 +1,16 @@
 <?php
 spl_autoload_register(function($classname){
-	if (substr($classname,0,10)=="Wafl\\Syrup" || substr($classname,0,11)=="\\Wafl\\Syrup")
+	if (!class_exists($classname,false))
 	{
-		$filePath = __DIR__.DIRECTORY_SEPARATOR.str_replace("\\", DIRECTORY_SEPARATOR, $classname).".php";
-		if (file_exists($filePath))
+		if (substr($classname,0,10)=="Wafl\\Syrup" || substr($classname,0,11)=="\\Wafl\\Syrup")
 		{
-			require_once ($filePath);
+			$filePath = __DIR__.DIRECTORY_SEPARATOR.str_replace("\\", DIRECTORY_SEPARATOR, $classname).".php";
+			if (file_exists($filePath))
+			{
+				require_once ($filePath);
+				return true;
+			}
 		}
+		return false;		
 	}
 });?>
