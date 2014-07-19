@@ -93,8 +93,8 @@ class Parser {
 
 			//get all characters of the input string
 			//@todo finish multibyte support
-			$chars = preg_split('//u', $this->_inputString, -1, PREG_SPLIT_NO_EMPTY);
-
+			//$chars = preg_split('//u', $this->_inputString, -1, PREG_SPLIT_NO_EMPTY);
+			$chars = str_split($this->_inputString);
 			//iterate over each character and process it
 			foreach ($chars as $char) {
 				$this->_processCharacter($char);
@@ -217,6 +217,7 @@ class Parser {
 				{
 					$this->_inTab = false;
 				}
+
 				switch ($evalChar) {
 					case " ":
 						if ($this->_inSpace) {
@@ -262,7 +263,7 @@ class Parser {
 						$this->_charBuffer .= $evalChar;
 						$this->_currentElementString .= $evalChar;
 						break;
-				}
+					}
 			}
 		}
 	}
@@ -275,6 +276,10 @@ class Parser {
 		if ($this->_charBuffer) {
 			$this->_currentRowCellCt++;
 
+			if (substr($this->_charBuffer, 0, 1) == "{") {
+				$this->_charBuffer = eval("return " . substr($this->_charBuffer, 1, strlen($this->_charBuffer) - 2) . ";");
+			}
+								
 			if (isset($this->_currentHeader) && $this->_currentHeader !== null && ($this->_currentDepth > $this->_currentHeaderDepth)) {
 				$this->_startValueList();
 				if ($this->_charBuffer) {
@@ -320,10 +325,6 @@ class Parser {
 			}
 
 			$this->_throwExceptionIfTooDeep();
-		}
-
-		if ($this->_tabBuffer && count($this->_tabBuffer) > 0) {
-			//need to handle buffer contents before leaving
 		}
 
 		$this->_tabBuffer		 = array();
