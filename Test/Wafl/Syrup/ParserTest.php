@@ -17,100 +17,19 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-		$this->object = new Parser("test 123",null);
+		require_once(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."Autoloader.php");
+        $this->object = new Parser(file_get_contents(__DIR__.DIRECTORY_SEPARATOR."ParserTest.syrp"));
     }
 
     /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
-
-    /**
+     * Test the Parse() method
      * Generated from @assert () == \DblEj\Tests\ExpectedResults\Syrp::GetExpectedTest1Output().
      *
      * @covers Wafl\Syrup\Parser::Parse
      */
     public function testParse()
     {
-        $this->assertEquals(
-          "test123"
-,
-          $this->object->Parse()
-        );
-    }
-
-    /**
-     * @covers Wafl\Syrup\Parser::Get_CurrentHeader
-     * @todo   Implement testGet_CurrentHeader().
-     */
-    public function testGet_CurrentHeader()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Wafl\Syrup\Parser::Get_CharPos
-     * @todo   Implement testGet_CharPos().
-     */
-    public function testGet_CharPos()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Wafl\Syrup\Parser::Get_LineNumber
-     * @todo   Implement testGet_LineNumber().
-     */
-    public function testGet_LineNumber()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Wafl\Syrup\Parser::Get_Depth
-     * @todo   Implement testGet_Depth().
-     */
-    public function testGet_Depth()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Wafl\Syrup\Parser::Get_HeadingDepth
-     * @todo   Implement testGet_HeadingDepth().
-     */
-    public function testGet_HeadingDepth()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Wafl\Syrup\Parser::Get_CurrentElementString
-     * @todo   Implement testGet_CurrentElementString().
-     */
-    public function testGet_CurrentElementString()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $expectedResult = unserialize(file_get_contents(__DIR__.DIRECTORY_SEPARATOR."ParserTest_Expected.bin"));
+        $this->assertEquals($expectedResult,$this->object->Parse());
     }
 }
