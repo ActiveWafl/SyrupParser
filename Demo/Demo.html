@@ -4,6 +4,7 @@
 		<script type="text/javascript">
 			window.onload = function()
 			{
+                document.refreshTimer = null;
 				document.getElementById("InputSyrup").onkeydown = function(e)
 				{
 					var keyCode = e.keyCode || e.which; 
@@ -47,14 +48,18 @@
 				};
 				document.getElementById("InputSyrup").onkeyup = function(e)
 				{
-					parseInput(this);
+                    if (document.refreshTimer !== null)
+                    {
+                        clearTimeout(document.refreshTimer);
+                    }
+					document.refreshTimer = setTimeout(function(){document.refreshTimer=null, parseInput(document.getElementById("InputSyrup"));}, 250);
 				};
 				
 				function parseInput(inputElem)
 				{
 					var http = new XMLHttpRequest();
 					http.onreadystatechange = function() {
-						if (http.readyState === 4){
+						if (http.readyState === 4 && http.responseText != ""){
 							var responseObject = JSON.parse(http.responseText);
 							if (responseObject.hasOwnProperty("ParsedResult"))
 							{
@@ -92,8 +97,6 @@
 					http.open('POST', 'index.php', true);
 					http.setRequestHeader('X-Requested-With', 'XMLHttpRequest'); 
 					http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-					http.setRequestHeader("Content-length", postVars.length);
-					http.setRequestHeader("Connection", "close");
 					http.send(postVars);
 				}
 				function updateCursorPositionInidcator(textAreaElement)
@@ -154,13 +157,13 @@
 			File Extension: .syrp<br>
 		</p>
 		<ul>
-			<li><a href="https://github.com/ActiveWafl/SyrupParser" target="_blank">Parser and details available @ Github</a></li>
-			<li>Command-line parser Download (<a href="/Downloads/syrup.phar">stable</a>, <a href="/Downloads/syrup.latest.phar">latest</a>)</li>
+			<li><a href="https://github.com/ActiveWafl/SyrupParser" target="_blank">Parser and details available @ Github</a>
+			<li>Command-line parser Download (<a href="/Downloads/syrup.phar">stable</a>, <a href="/Downloads/syrup.latest.phar">latest</a>)
 			<ul>
-				<li>note: command-line parser is written in php and requires php to run.</li>
-				<li>to run just type: php syrup.phar</li>
+				<li>note: command-line parser is written in php and requires php to run.
+				<li>to run just type: php syrup.phar
 			</ul>
-			<li>Icons: (<a href="http://syrupfile.org/Downloads/Icons/text-x-syrp.ico">16px ico</a>, <a href="http://syrupfile.org/Downloads/Icons/text-x-syrp-16.gif">16px gif</a>, <a href="http://syrupfile.org/Downloads/Icons/text-x-syrp-48.gif">48px gif</a>)</a></li>
+			<li>Icons: (<a href="http://syrupfile.org/Downloads/Icons/text-x-syrp.ico">16px ico</a>, <a href="http://syrupfile.org/Downloads/Icons/text-x-syrp-16.gif">16px gif</a>, <a href="http://syrupfile.org/Downloads/Icons/text-x-syrp-48.gif">48px gif</a>)</li>
 		</ul>
 
 <!--Syrup files are used by <a href="http://activewafl.com">The ActiveWAFL Framework</a></li>
