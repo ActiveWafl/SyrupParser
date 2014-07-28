@@ -114,7 +114,7 @@ Definitions
 
 +    **Functional Indent**
 
-	In Syrup a tab character (or two or more consecutive spaces) is the delimiter between the Values in a Horizontal Value List (similar to CSV).
+	In Syrup a tab character (or two consecutive spaces where the second space's position in the line can be divided evenly by the tab-depth) is the delimiter between the Values in a Horizontal Value List (similar to CSV).
 	However, consecutive tab characters, (or any space following consecutive spaces [ex: 3 spaces]) are 
 	treated as if they are a single tab character.
 	This allows the Horizontal Value Lists to be lined up in a human readable row of cells.
@@ -126,7 +126,7 @@ Definitions
 
 +    **Depth**
 
-	The number of Functional Indents encountered since the last eol|bof based on the parser's current cursor position.
+	The number of Functional Indents encountered since the last EOL|BOF based on the parser's current cursor position.
 	(In the above example for Functional Indent, the Depth would be 2 if the cursor was at element3)
 
 +    **Setting**
