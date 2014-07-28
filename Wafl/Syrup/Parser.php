@@ -46,7 +46,9 @@ class Parser {
 	private $_inForwardSlash = false;
 	private $_inComment		 = false;
 	private $_inQuote		 = false;
-	private $_inSpace		 = false;
+    private $_currentSpaceCt = 0;
+    private $_currentBlankSpaceCt = 0;
+    private $_spacesPerTab   = 0;
 	private $_inTab			 = false;
 	private $_encoding;
 	private $_currentElementString;
@@ -90,7 +92,7 @@ class Parser {
 
 		if ($this->_resultBuffer === null) { //don't reparse if already parsed
 			$this->_resultBuffer = array();
-
+            
 			//get all characters of the input string
 			//@todo finish multibyte support
 			//$chars = preg_split('//u', $this->_inputString, -1, PREG_SPLIT_NO_EMPTY);
@@ -111,9 +113,17 @@ class Parser {
 
 			$this->_resultBuffer = $this->_removeUnnecessaryNesting($this->_resultBuffer); //post-processing.  Convert empty Headers into Values,and also deal with key=val assignments
 		}
-		return new ParseResult($this->_resultBuffer, $charPos, $lineNumber, $currentDepth, $currentHeaderDepth,
-						 $this->_currentElementString);
+		return new ParseResult($this->_resultBuffer, $charPos, $lineNumber, $currentDepth, $currentHeaderDepth,$this->_currentElementString);
 	}
+    public function ParseToDisk(ParseResult $result, $destFile)
+    {
+        $resultObj = serialize($result);
+        if (file_exists($destFile))
+        {
+            unlink($destFile);
+        }
+        file_put_contents($destFile, $resultObj);
+    }
 
 	/**
 	 * Removes nesting of Value Lists when it isn't needed.
@@ -129,7 +139,6 @@ class Parser {
 //		if (count($array) == 1 && (is_array(reset($array))) && key($array) === 0) { //we test the key for zero to ensure this is a setting and not a headding.  But what if someone uses 0 as a heading?  Maybe we should reserve it
 //			$array = $this->_removeUnnecessaryNesting(reset($array));
 //		}
-
 		$resultArray = array();
 		foreach ($array as $elemKey => &$element) {
 			$cleanKey = trim($useKey ? $useKey : preg_replace('/\{\$\{.*\}\$\}/', "", $elemKey));
@@ -198,6 +207,7 @@ class Parser {
 				$this->_inBackSlash = false;
 			}
 			else {
+
 				$evalChar = $char;
 				if ($this->_inForwardSlash) {
 					if ($evalChar != "/") {
@@ -206,28 +216,29 @@ class Parser {
 					}
 				}
 
-				if ($evalChar != " " && $this->_inSpace) { //if they ended up using the space without doubling it then add the literal space
-					if (!$this->_inTab) //dont add a space if there were several in a row as they are all considered a tab after the first one (and the first one is nullified)
+				if ($evalChar != " " && ($this->_currentBlankSpaceCt==1)) { //if they ended up using the space without doubling it then add the literal space
+					if (!$this->_inTab) //dont add a space if they were part of an implied tab
 					{
 						$this->_charBuffer .= " ";
 					}
-					$this->_inSpace = false;
+					$this->_currentSpaceCt = 0;
+                    $this->_currentBlankSpaceCt = 0;
 				}
 				if ($evalChar != " " && $evalChar != "\t" && $this->_inTab)
 				{
 					$this->_inTab = false;
 				}
 
+                $this->_currentSpaceCt++;
 				switch ($evalChar) {
 					case " ":
-						if ($this->_inSpace) {
-							//$this->_inSpace = false;
-							$this->_processTab();
-						}
-						else {
-							$this->_inSpace = true;
-						}
-						$this->_currentElementString = "";
+                        $this->_currentBlankSpaceCt++;
+                        if (($this->_spacesPerTab > 0) && ($this->_currentSpaceCt % $this->_spacesPerTab == 0))
+                        {
+                            $this->_currentSpaceCt = 0;
+                            $this->_processTab();
+                            $this->_currentElementString = "";
+                        }
 						break;
 					case "\t":
 						$this->_processTab();
@@ -260,10 +271,17 @@ class Parser {
 					case "]":
 						break;
 					default:
-						$this->_charBuffer .= $evalChar;
-						$this->_currentElementString .= $evalChar;
+                        if ($this->_currentDepth == 1 && $this->_currentHeaderDepth == 1 && $this->_spacesPerTab == 0 && $this->_currentBlankSpaceCt > 1)
+                        {
+                            $this->_spacesPerTab = $this->_currentSpaceCt-1;
+                            $this->_processTab();
+                            $this->_currentElementString = "";
+                        }              
+                        $this->_charBuffer .= $evalChar; 
+                        $this->_currentElementString .= $evalChar;
+                        $this->_currentBlankSpaceCt=0;
 						break;
-					}
+                }
 			}
 		}
 	}
@@ -291,6 +309,8 @@ class Parser {
 			}
 			$this->_charBuffer = "";
 		}
+        $this->_currentSpaceCt = 0;
+        $this->_currentBlankSpaceCt = 0;
 	}
 
 	private function _startValueList() {
@@ -308,6 +328,7 @@ class Parser {
 	private function _handleEol() {
 		$this->_inComment = false; //comments can't be more than one line
 
+        $this->_charBuffer = trim($this->_charBuffer);
 		if (($this->_charBuffer !== null && $this->_charBuffer !== "") || ($this->_tabBuffer && count($this->_tabBuffer))) {
 
 			$this->_currentRowCellCt++;
@@ -316,8 +337,7 @@ class Parser {
 			}
 			else {
 				$this->_currentHeader								 = array();
-				$this->_resultBuffer								 = array(
-					$this->_charBuffer => &$this->_currentHeader);
+				$this->_resultBuffer								 = array($this->_charBuffer => &$this->_currentHeader);
 				$this->_lastLevelParents[$this->_currentDepth]		 = &$this->_resultBuffer; //current depth should always be zero here?
 				$this->_lastLevelParents[$this->_currentDepth + 1]	 = &$this->_currentHeader;
 				$this->_currentHeaderDepth							 = $this->_currentDepth + 1;
@@ -331,18 +351,20 @@ class Parser {
 		$this->_currentDepth	 = 1;
 		$this->_currentRowCellCt = 0;
 		$this->_charPos			 = 0;
+        $this->_currentSpaceCt   = 0;
+        $this->_currentBlankSpaceCt = 0;
 		$this->_lineNumber++;
 	}
 
 	private function _throwExceptionIfTooDeep() {
-		if ($this->_currentDepth > 0) {
+		if ($this->_currentDepth > 1 && ($this->_spacesPerTab > 0 || $this->_currentHeaderDepth > 1)) {
 			if ($this->_currentDepth - $this->_currentHeaderDepth > 1) {
 				if (class_exists("\DblEj\Parsing\ParsingException")) {
 					throw new \DblEj\Parsing\ParsingException($this->_lineNumber, $this->_charPos,
 											   "Tabbed past all ancestors, depth $this->_currentDepth");
 				}
 				else {
-					throw new \Exception("Invalid SyRuP at line: $this->_lineNumber, pos: $this->_charPos: Tabbed past all ancestors. " . $this->_currentElementString . "'s Depth is $this->_currentDepth.  Based on the current Heading Depth, the largest allowed Depth for this Element is " . ($this->_currentHeaderDepth + 1) . ".");
+					throw new \Exception("Invalid SyRuP at line: $this->_lineNumber, pos: $this->_charPos: Tabbed past all ancestors. " . $this->_currentElementString . "'s Depth is $this->_currentDepth.  Based on the current Heading Depth (".$this->_currentHeaderDepth."), the largest allowed Depth for this Element is " . ($this->_currentHeaderDepth + 1) . ".");
 				}
 			}
 		}
@@ -359,17 +381,14 @@ class Parser {
 		}
 		if ($this->_currentDepth > $this->_currentHeaderDepth) {
 			if ($this->_currentRowCellCt == 1) {
-
-//			if (!isset($this->_lastLevelParents[$this->_currentDepth-1])) {
-//				throw new \Exception("Invalid SyRuP at line: $this->_lineNumber, pos: $this->_charPos:  You cannot place a header within a content row (Cursor Depth: $this->_currentDepth, Last valid Heading Depth: $this->_currentHeaderDepth)");
-//			}
-
+                    //starting a horizontal list with a row header
+                    
 				$uniqueId = "{\${" . uniqid() . "}\$}"; //values in lists need unique id appended prior to preprocessing otherwise they overwrite eachover
 
 				$this->_currentHeader[$this->_charBuffer . $uniqueId]	 = array();
 				$this->_currentHeader								 = &$this->_currentHeader[$this->_charBuffer . $uniqueId];
 				$this->_lastLevelParents[$this->_currentDepth]		 = &$this->_currentHeader;
-				$this->_currentHeaderDepth++;  //= $this->_currentDepth; @todo im pretty sure this is the same as the ++ so we can delete comment
+				$this->_currentHeaderDepth++;
 				$this->_currentDepth++;
 				$this->_settingDepth								 = 0;
 			}
@@ -397,6 +416,7 @@ class Parser {
 				$this->_currentHeader[] = $this->_tabBuffer;
 			}
 		}
+        $this->_currentSpaceCt = 0;
 	}
 
 // <editor-fold defaultstate="collapsed" desc=" Properties ">
