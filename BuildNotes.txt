@@ -1,0 +1,3 @@
+Youre wondering how the thing gets its way into wafl?
+Have a look at WaflAppSupport/dist-src.
+It gets compiled as a [har and included with app
