@@ -229,6 +229,15 @@ class Parser {
 					$this->_inTab = false;
 				}
 
+                if ($evalChar != " " && $this->_currentDepth == 1 && $this->_currentHeaderDepth == 1 && $this->_spacesPerTab == 0 && $this->_currentBlankSpaceCt > 1)
+                {
+                    $this->_spacesPerTab = $this->_currentBlankSpaceCt;
+                    $this->_currentSpaceCt = 0;
+                    $this->_currentBlankSpaceCt = 0;
+                    $this->_currentElementString = "";
+                    $this->_processTab();
+                }              
+                
                 $this->_currentSpaceCt++;
 				switch ($evalChar) {
 					case " ":
@@ -271,12 +280,6 @@ class Parser {
 					case "]":
 						break;
 					default:
-                        if ($this->_currentDepth == 1 && $this->_currentHeaderDepth == 1 && $this->_spacesPerTab == 0 && $this->_currentBlankSpaceCt > 1)
-                        {
-                            $this->_spacesPerTab = $this->_currentSpaceCt-1;
-                            $this->_processTab();
-                            $this->_currentElementString = "";
-                        }              
                         $this->_charBuffer .= $evalChar; 
                         $this->_currentElementString .= $evalChar;
                         $this->_currentBlankSpaceCt=0;
