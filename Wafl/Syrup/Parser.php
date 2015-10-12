@@ -170,7 +170,7 @@ class Parser {
 						$elementValue = null;
 						if (count($element) > 2) {
 							$elementValue = $element[2];
-						}
+                        }
 						$resultArray[trim($element[0])] = $elementValue;
 					}
 					elseif ($recursive) {
@@ -259,7 +259,7 @@ class Parser {
 						$this->_handleEol();
 						$this->_currentElementString = "";
 						break;
-					case "\"";
+					case "\"":
 						$this->_inQuote				 = !$this->_inQuote;
 						break;
 					case "/":

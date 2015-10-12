@@ -1,0 +1,135 @@
+options
+{
+   STATIC=false;
+   COMMON_TOKEN_ACTION=true;
+   TOKEN_FACTORY = "Token";
+//   DEBUG_TOKEN_MANAGER=true;
+//   DEBUG_PARSER=true;
+   BUILD_PARSER = false;
+}
+
+PARSER_BEGIN(SyrupParser)
+
+package org.wafl.syrpfiletype.jcclexer;
+
+import java.util.*;
+import java.io.*;
+
+public class SyrupParser {
+
+
+	static public void main(String[] args) throws Exception {
+		InputStream in;
+		if (args.length == 0) {
+			in = System.in;
+		} else {
+			in = new FileInputStream(args[0]);
+		}
+		SyrupParser parser = new SyrupParser(in);
+		parser.Root();
+	}
+
+}
+
+PARSER_END(SyrupParser)
+
+TOKEN_MGR_DECLS : {
+
+int pendingDedents;
+Token lastToken;
+List<Integer> indentPositions = new ArrayList<Integer>();
+
+void CommonTokenAction(Token currentToken) {
+   int tokenSize = currentToken.image.length();
+   if (currentToken.kind == EOF) {// stick in the dedents we need to balance
+        if (!indentPositions.isEmpty()) {
+			indentPositions.remove(indentPositions.size() -1);
+			currentToken.kind = DEDENT;
+			currentToken.image = "<DEDENT>";
+			input_stream.backup(tokenSize);
+		}
+		return;
+   }
+   if (pendingDedents >0) {//handle pending dedents
+	  indentPositions.remove(indentPositions.size() -1);
+      input_stream.backup(tokenSize);
+      currentToken.kind = DEDENT;
+	  currentToken.image = "<DEDENT>";
+      --pendingDedents;
+	  return;
+   }
+   if (lastToken != null
+       && lastToken.beginColumn == currentToken.beginColumn
+	   && lastToken.beginLine == currentToken.beginLine) {
+      return;
+   }
+   int lastLine = (lastToken == null) ? 0 : lastToken.endLine;
+   int currentLine = currentToken.beginLine;
+   if (currentLine == lastLine)  {
+	   lastToken = currentToken;
+	   return; // We are on the same line, so no indent/dedent here, so just return.
+   }
+   int currentColumn = currentToken.beginColumn;
+   int currentIndent = indentPositions.isEmpty() ? 0 : indentPositions.get(indentPositions.size() -1);
+   if (currentColumn == currentIndent) {
+	   lastToken = currentToken;
+	   return; // Indentation is same as before, so just return.
+   }
+   if (currentColumn > currentIndent) {//indent
+        indentPositions.add(currentColumn);
+		currentToken.kind = INDENT;
+		currentToken.image = "<INDENT>";
+   } else {//dedent
+       int positionInIndents = indentPositions.indexOf(currentColumn);
+       if (positionInIndents == -1) { throw new RuntimeException("Incorrect indentation");}
+	   currentToken.kind = DEDENT;
+	   currentToken.image = "<DEDENT>";
+	   indentPositions.remove(indentPositions.size()-1);
+       pendingDedents = indentPositions.size() - positionInIndents -1;
+   }
+   input_stream.backup(tokenSize);
+   lastToken = currentToken;
+}
+
+
+}
+
+SKIP : {
+    < ( " " | "\t" | "\n" | "\r" )+ >
+}
+
+TOKEN : {
+   <WORD : (["a"-"z","A"-"Z"])+>
+}
+
+
+<PHONY> TOKEN : {
+   <INDENT : "{">
+   |
+   <DEDENT: "}">
+}
+
+void Root() : {}
+{
+ (
+    <WORD>
+    |
+    Block()
+ )*
+ <EOF>
+}
+
+void Block() : {}
+{
+   <INDENT>
+  (
+       <WORD>
+       |
+       Block()
+  )*
+  <DEDENT>
+}
+
+
+
+
