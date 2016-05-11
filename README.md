@@ -76,30 +76,28 @@ What a .syrp file looks like
 >
 	You probably would not mix and match all of these Elements.  This is here for full demonstration purposes.
 	
-	SectionHeading
+    Heading1
+        SubHeading1
+            Value	Value	Value	Value
+            Value	Value	Value	Value
+            Value	Value	Value	Value
 
-		SectionHeading
-				Value	Value	Value	Value
-				Value	Value	Value	Value
-				Value	Value	Value	Value
+        SubHeading2
+            Setting1
+                Value
+            Setting2
+                Value
 
-		SectionHeading
-				Setting
-						Value
-				Setting
-						Value
+        SubHeading3
+            Setting1	=	Value
+            Setting2	=	Value
+            Setting3	=	Value
 
-		SectionHeading
-			Setting		=		Value
-			Setting		=		Value
-			Setting		=		Value
-
-			SectionHeading
-				Setting
-					Value		Value		Value
-				Setting
-					Value		Value		Value
-
+            SectionHeading
+                Setting1
+                    Value	Value	Value
+                Setting2
+                    Value	Value	Value
 
 Definitions
 -----------
