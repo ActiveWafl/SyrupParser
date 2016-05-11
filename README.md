@@ -11,7 +11,7 @@ SyRuP File
 **S** y **R** u **P** = 
 **S**tructured **R**eadable **P**arseable
 
-SyRuP files are easy to read configuration files, very similar to .ini files.
+SyRuP files are easy to read configuration files, very similar to .ini files.  
 The primary difference between .syrp files and .ini files is that SyRuP files offer better support for lists and hierarchical information of infinite depth.
 
 SyRuP is pronounced "sirrup"
@@ -44,7 +44,7 @@ http://syrupfile.org/
 Background
 -----------
 
-SyRuP files were born as I struggled to pick a default file format for all of the application configuration files in an ActiveWAFL application.
+SyRuP files were born as I struggled to pick a default file format for all of the application configuration files in an ActiveWAFL application.  
 
 I liked the ease of .ini files.  They're human-readable and parsers for it are easy to find.
 The problem with .ini's is when you want to represent slightly more complex data such as lists, arrays, matrices, and n-depth hierarchical relationships.
@@ -61,7 +61,7 @@ But it has curly brackets, and other ugly tokens, all over the place.
 NEON supports setting inheritance.  
 But it doesn't support deep levels of hierarchical data and inherited settings are not always easily human-readable.
 
-XML offers the ability to tag information with other information.
+XML offers the ability to tag information with other information.  
 But it had ugly markup all over the place.
 
 What I wanted was closest to YAML.  The ability to write hierarchical information in an easy-to-read format.  
@@ -93,7 +93,7 @@ What a .syrp file looks like
             Setting2	=	Value
             Setting3	=	Value
 
-            SectionHeading
+            SubSubHeading1
                 Setting1
                     Value	Value	Value
                 Setting2
@@ -113,10 +113,10 @@ Definitions
 +    **Functional Indent**
 
 	In Syrup a tab character (or two consecutive spaces where the second space's position in the line can be divided evenly by the tab-depth) is the delimiter between the Values in a Horizontal Value List (similar to CSV).
-	However, consecutive tab characters, (or any space following consecutive spaces [ex: 3 spaces]) are 
+	However, consecutive tab characters, (or any space following consecutive spaces [ex: 3 spaces]) are
 	treated as if they are a single tab character.
-	This allows the Horizontal Value Lists to be lined up in a human readable row of cells.
 
+	This allows the Horizontal Value Lists to be lined up in a human readable row of cells.
 	A Functional Indent is any number of tabs and/or consecutive spaces that exists between two consecutive elements.
 
 	In the following example, there are two Functional Indents.  One following "element1" and one following "element2"
@@ -124,7 +124,7 @@ Definitions
 
 +    **Depth**
 
-	The number of Functional Indents encountered since the last EOL|BOF based on the parser's current cursor position.
+	The number of Functional Indents encountered since the last EOL|BOF based on the parser's current cursor position.  
 	(In the above example for Functional Indent, the Depth would be 2 if the cursor was at element3)
 
 +    **Setting**
@@ -132,12 +132,15 @@ Definitions
 	Any Element that contains only a single Value directly beneath it or
 	Any Element that contains a single Horizontal Value List directly beneath it or
 	Any Element that contains a single Vertical Value List directly beneath it or
-	Any Element that is not preceded by any other Elements on the same line and is followed by: (Equal Sign) FunctionalIndent Value
+	Any Element that is not preceded by any other Elements on the same line and is followed by: (Equal Sign) FunctionalIndent Value  
+
+    Note: Settings at equal depths and with the same parents (siblings) must have unique names because the names are used as unique keys
 
 +    **Value**
 
-	Any Element or list of Elements that has a parent Element and does not contain any child elements (example 1, example 2, example 3) or 
-	Any Element that is directly preceded by an equal sign and a Functional Indent (example 4) 
+	Any Element or list of Elements that has a parent Element and does not contain any child elements (example 1, example 2, example 3) or
+	Any Element that is directly preceded by an equal sign and a Functional Indent (example 4)
+
 	Note: Values are always part of a Key/Value pair where the Key is the Setting and the Value is the Value defined herein
 
 	*Example 1*
@@ -182,7 +185,8 @@ Definitions
 +    **Section Heading**
 
 	Any Element that contains any Setting Assignments, at any Depth.
-	A Section Heading can contain other Section Headings, 
+
+	A Section Heading can contain other Section Headings,  
 	as long as there is a Setting Assignment somewhere in the descendent tree.
 
 +    **Section**
