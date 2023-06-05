@@ -73,8 +73,8 @@ class Parser
       $this->_encoding = mb_detect_encoding($this->_inputString);
       if ($this->_encoding != "ASCII") {
         /*
-				 * @todo finish multibyte support
-				 */
+         * @todo finish multibyte support
+         */
         throw new \Exception("If you're parsing non-ascii files, you  must pass in the encoding argument");
       }
     }
@@ -139,9 +139,9 @@ class Parser
    */
   private function _removeUnnecessaryNesting($array, $recursive = true, $useKey = null)
   {
-    //		if (count($array) == 1 && (is_array(reset($array))) && key($array) === 0) { //we test the key for zero to ensure this is a setting and not a headding.  But what if someone uses 0 as a heading?  Maybe we should reserve it
-    //			$array = $this->_removeUnnecessaryNesting(reset($array));
-    //		}
+    // if (count($array) == 1 && (is_array(reset($array))) && key($array) === 0) { //we test the key for zero to ensure this is a setting and not a headding.  But what if someone uses 0 as a heading?  Maybe we should reserve it
+    //   $array = $this->_removeUnnecessaryNesting(reset($array));
+    // }
     $resultArray = array();
     foreach ($array as $elemKey => &$element) {
       $cleanKey = trim($useKey ? $useKey : preg_replace('/\{\$\{.*\}\$\}/', "", $elemKey));
@@ -263,8 +263,8 @@ class Parser
           case "\\":
             $this->_inBackSlash = true;
             break;
-            //			case "=":
-            //				break;
+            //   case "=":
+            //     break;
           case "[":  //ignore
           case "]":
             break;
