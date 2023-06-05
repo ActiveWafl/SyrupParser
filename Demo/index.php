@@ -4,7 +4,7 @@ use Wafl\Syrup\Utils;
 
 require_once(__DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "Autoloader.php");
 
-$parseText    = isset($_REQUEST["ParseText"]) ? $_REQUEST["ParseText"] : null;
+$parseText = isset($_REQUEST["ParseText"]) ? $_REQUEST["ParseText"] : null;
 $cursorPosition = isset($_REQUEST["CursorPosition"]) ? $_REQUEST["CursorPosition"] : null;
 if ($parseText) {
   try {
@@ -37,18 +37,18 @@ if ($parseText) {
 
     //this is an "ajax" call, return the parsed text
     $returnData = array(
-      "ParsedResult"    => $resultString,
-      "ParsedResultJSON"  => $resultStringJson,
-      "CursorDepth"    => $parseResultUptoCursor->Get_EndingCursorDepth(),
-      "CursorLine"    => $parseResultUptoCursor->Get_EndingCursorLine(),
-      "CursorPosition"  => $parseResultUptoCursor->Get_EndingCursorPosition(),
-      "HeadingDepth"    => $parseResultUptoCursor->Get_EndingHeadingDepth(),
-      "ParserDepth"    => $parseResult->Get_EndingCursorDepth(),
-      "ParserLine"    => $parseResult->Get_EndingCursorLine(),
-      "ParserPosition"  => $parseResult->Get_EndingCursorPosition(),
+      "ParsedResult" => $resultString,
+      "ParsedResultJSON" => $resultStringJson,
+      "CursorDepth" => $parseResultUptoCursor->Get_EndingCursorDepth(),
+      "CursorLine" => $parseResultUptoCursor->Get_EndingCursorLine(),
+      "CursorPosition" => $parseResultUptoCursor->Get_EndingCursorPosition(),
+      "HeadingDepth" => $parseResultUptoCursor->Get_EndingHeadingDepth(),
+      "ParserDepth" => $parseResult->Get_EndingCursorDepth(),
+      "ParserLine" => $parseResult->Get_EndingCursorLine(),
+      "ParserPosition" => $parseResult->Get_EndingCursorPosition(),
       "ParserHeadingDepth" => $parseResult->Get_EndingHeadingDepth(),
-      "ParserCurrentElement"  => $parser ? $parseResult->Get_ElementString() : "N/A",
-      "CursorCurrentElement"  => $parser ? $parseResultUptoCursor->Get_ElementString() : "N/A"
+      "ParserCurrentElement" => $parser ? $parseResult->Get_ElementString() : "N/A",
+      "CursorCurrentElement" => $parser ? $parseResultUptoCursor->Get_ElementString() : "N/A"
 
     );
 
@@ -59,11 +59,11 @@ if ($parseText) {
         "Message" => $ex->getMessage(),
         "Line" => $ex->getLine(),
         "File" => $ex->getFile(),
-        "ParserDepth"    => $parser ? $parser->Get_Depth() : 0,
-        "ParserLine"    => $parser ? $parser->Get_LineNumber() : 0,
-        "ParserPosition"  => $parser ? $parser->Get_CharPos() : 0,
+        "ParserDepth" => $parser ? $parser->Get_Depth() : 0,
+        "ParserLine" => $parser ? $parser->Get_LineNumber() : 0,
+        "ParserPosition" => $parser ? $parser->Get_CharPos() : 0,
         "ParserHeadingDepth" => $parser ? $parser->Get_HeadingDepth() : 0,
-        "CurrentElement"  => $parser ? $parser->Get_CurrentElementString() : 0
+        "CurrentElement" => $parser ? $parser->Get_CurrentElementString() : 0
       )
     );
   }

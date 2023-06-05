@@ -24,13 +24,13 @@ class Parser
    * @var integer
    */
   private $_currentHeaderDepth = 0;
-  private $_settingDepth     = 0;
-  private $_currentHeader     = null;
-  private $_lastLevelParents   = array();
-  private $_lineNumber     = 1;
+  private $_settingDepth = 0;
+  private $_currentHeader = null;
+  private $_lastLevelParents = array();
+  private $_lineNumber = 1;
   private $_charPos;
-  private $_currentRowCellCt   = 0;
-  private $_tabBuffer       = array();
+  private $_currentRowCellCt = 0;
+  private $_tabBuffer = array();
 
   /**
    * a character buffer user for buffering consecutive value chars;
@@ -43,14 +43,14 @@ class Parser
    * @todo combine all these flags into one var or something
    * @var boolean
    */
-  private $_inBackSlash   = false;
+  private $_inBackSlash = false;
   private $_inForwardSlash = false;
-  private $_inComment     = false;
-  private $_inQuote     = false;
+  private $_inComment = false;
+  private $_inQuote = false;
   private $_currentSpaceCt = 0;
   private $_currentBlankSpaceCt = 0;
-  private $_spacesPerTab   = 0;
-  private $_inTab       = false;
+  private $_spacesPerTab = 0;
+  private $_inTab = false;
   private $_encoding;
   private $_currentElementString;
 
@@ -79,8 +79,8 @@ class Parser
       }
     }
 
-    $this->_inputString   = $inputSyrp;
-    $this->_encoding   = $encoding;
+    $this->_inputString = $inputSyrp;
+    $this->_encoding = $encoding;
   }
 
   /**
@@ -106,10 +106,10 @@ class Parser
       }
 
 
-      $charPos       = $this->_charPos;
-      $lineNumber       = $this->_lineNumber;
-      $currentDepth     = $this->_currentDepth;
-      $currentHeaderDepth   = $this->_currentHeaderDepth;
+      $charPos = $this->_charPos;
+      $lineNumber = $this->_lineNumber;
+      $currentDepth = $this->_currentDepth;
+      $currentHeaderDepth = $this->_currentHeaderDepth;
 
       //handle any unprocessed data in the buffer, since the file will rarely end with a \n
       $this->_handleEol();
@@ -153,9 +153,9 @@ class Parser
             $resultArray[] = $cleanKey;
           }
         } elseif (count($element) == 1) {
-          $first     = reset($element);
-          $firstKey   = key($element);
-          $firstKey   = preg_replace('/\{\$\{.*\}\$\}/', "", $firstKey);
+          $first = reset($element);
+          $firstKey = key($element);
+          $firstKey = preg_replace('/\{\$\{.*\}\$\}/', "", $firstKey);
           if (is_array($first) && count($first) == 0) {
             $resultArray[$cleanKey] = $firstKey;
           } elseif (is_array($first)) {
@@ -250,12 +250,12 @@ class Parser
             $this->_currentElementString = "";
             break;
           case "\"":
-            $this->_inQuote         = !$this->_inQuote;
+            $this->_inQuote = !$this->_inQuote;
             break;
           case "/":
             if ($this->_inForwardSlash) {
-              $this->_inForwardSlash   = false;
-              $this->_inComment     = true;
+              $this->_inForwardSlash = false;
+              $this->_inComment = true;
             } else {
               $this->_inForwardSlash = true;
             }
@@ -308,12 +308,12 @@ class Parser
   private function _startValueList()
   {
     if ($this->_currentRowCellCt == 1) { //first value in a list (they put in a value and hit tab so...)
-      $newIdx                         = count($this->_currentHeader);
-      $this->_currentHeader[$newIdx]             = array();
-      $this->_currentHeader                 = &$this->_currentHeader[$newIdx];
+      $newIdx = count($this->_currentHeader);
+      $this->_currentHeader[$newIdx] = array();
+      $this->_currentHeader = &$this->_currentHeader[$newIdx];
       $this->_currentHeaderDepth++;
       $this->_currentDepth++; //@todo just wanna double check because we are already incrementing depth in prior method (tab)
-      $this->_settingDepth                 = $this->_currentHeaderDepth;
+      $this->_settingDepth = $this->_currentHeaderDepth;
       $this->_lastLevelParents[$this->_currentHeaderDepth] = &$this->_currentHeader;
     }
   }
@@ -329,22 +329,22 @@ class Parser
       if (isset($this->_currentHeader) && $this->_currentHeader !== null) {
         $this->_handleEolWhenHeaderIsSet();
       } else {
-        $this->_currentHeader                 = array();
-        $this->_resultBuffer                 = array($this->_charBuffer => &$this->_currentHeader);
-        $this->_lastLevelParents[$this->_currentDepth]     = &$this->_resultBuffer; //current depth should always be zero here?
-        $this->_lastLevelParents[$this->_currentDepth + 1]   = &$this->_currentHeader;
-        $this->_currentHeaderDepth               = $this->_currentDepth + 1;
-        $this->_charBuffer                   = "";
+        $this->_currentHeader = array();
+        $this->_resultBuffer = array($this->_charBuffer => &$this->_currentHeader);
+        $this->_lastLevelParents[$this->_currentDepth] = &$this->_resultBuffer; //current depth should always be zero here?
+        $this->_lastLevelParents[$this->_currentDepth + 1] = &$this->_currentHeader;
+        $this->_currentHeaderDepth = $this->_currentDepth + 1;
+        $this->_charBuffer = "";
       }
 
       $this->_throwExceptionIfTooDeep();
     }
 
-    $this->_tabBuffer     = array();
-    $this->_currentDepth   = 1;
+    $this->_tabBuffer = array();
+    $this->_currentDepth = 1;
     $this->_currentRowCellCt = 0;
-    $this->_charPos       = 0;
-    $this->_currentSpaceCt   = 0;
+    $this->_charPos = 0;
+    $this->_currentSpaceCt = 0;
     $this->_currentBlankSpaceCt = 0;
     $this->_lineNumber++;
   }
@@ -371,9 +371,9 @@ class Parser
     if (($this->_currentRowCellCt == 1)) {
       if ($this->_settingDepth) {
         //headers cant go into value lists...
-        $this->_currentHeader   = &$this->_lastLevelParents[$this->_currentHeaderDepth - 1];
+        $this->_currentHeader = &$this->_lastLevelParents[$this->_currentHeaderDepth - 1];
         $this->_currentHeaderDepth--;
-        $this->_settingDepth   = 0;
+        $this->_settingDepth = 0;
       }
     }
     if ($this->_currentDepth > $this->_currentHeaderDepth) {
@@ -382,12 +382,12 @@ class Parser
 
         $uniqueId = "{\${" . uniqid() . "}\$}"; //values in lists need unique id appended prior to preprocessing otherwise they overwrite eachover
 
-        $this->_currentHeader[$this->_charBuffer . $uniqueId]   = array();
-        $this->_currentHeader                 = &$this->_currentHeader[$this->_charBuffer . $uniqueId];
-        $this->_lastLevelParents[$this->_currentDepth]     = &$this->_currentHeader;
+        $this->_currentHeader[$this->_charBuffer . $uniqueId] = array();
+        $this->_currentHeader = &$this->_currentHeader[$this->_charBuffer . $uniqueId];
+        $this->_lastLevelParents[$this->_currentDepth] = &$this->_currentHeader;
         $this->_currentHeaderDepth++;
         $this->_currentDepth++;
-        $this->_settingDepth                 = 0;
+        $this->_settingDepth = 0;
       } else {
         $this->_currentHeader[] = $this->_charBuffer;
       }
@@ -395,15 +395,15 @@ class Parser
     } else {
       $this->_currentHeader = &$this->_lastLevelParents[$this->_currentDepth - 1];
       if ($this->_charBuffer !== null && $this->_charBuffer !== "") {
-        $this->_tabBuffer[]   = $this->_charBuffer;
-        $this->_charBuffer   = "";
+        $this->_tabBuffer[] = $this->_charBuffer;
+        $this->_charBuffer = "";
       }
       if (count($this->_tabBuffer) == 1) {
-        $uniqueId                         = "{\${" . uniqid() . "}\$}"; //values in lists need unique id appended prior to preprocessing otherwise they overwrite eachover
-        $this->_currentHeader[$this->_tabBuffer[0] . $uniqueId]   = array();
-        $this->_currentHeader                   = &$this->_currentHeader[$this->_tabBuffer[0] . $uniqueId];
-        $this->_lastLevelParents[$this->_currentDepth]       = &$this->_currentHeader;
-        $this->_currentHeaderDepth                 = $this->_currentDepth;
+        $uniqueId = "{\${" . uniqid() . "}\$}"; //values in lists need unique id appended prior to preprocessing otherwise they overwrite eachover
+        $this->_currentHeader[$this->_tabBuffer[0] . $uniqueId] = array();
+        $this->_currentHeader = &$this->_currentHeader[$this->_tabBuffer[0] . $uniqueId];
+        $this->_lastLevelParents[$this->_currentDepth] = &$this->_currentHeader;
+        $this->_currentHeaderDepth = $this->_currentDepth;
 
         $this->_settingDepth = 0;
       } else {
