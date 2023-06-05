@@ -9,7 +9,8 @@ Demo App
 -----------
 There is a demo app in Demo/ that can be ran by installing on a PHP server, or alternately using Docker.
 
-#Docker Image#
+Docker Image
+
 In this repo's root folder, run the following to create an image for the Demo app:
 
 `docker build -t syrup-parser -f ./Dockerfile-demoapp .`
