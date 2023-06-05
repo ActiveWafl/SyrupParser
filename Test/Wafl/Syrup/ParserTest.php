@@ -1,4 +1,5 @@
 <?php
+
 namespace Wafl\Syrup;
 
 /**
@@ -17,8 +18,8 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-		require_once(__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."Autoloader.php");
-        $this->object = new Parser(file_get_contents(__DIR__.DIRECTORY_SEPARATOR."ParserTest.syrp"));
+        require_once(__DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "Autoloader.php");
+        $this->object = new Parser(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . "ParserTest.syrp"));
     }
 
     /**
@@ -29,7 +30,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testParse()
     {
-        $expectedResult = unserialize(file_get_contents(__DIR__.DIRECTORY_SEPARATOR."ParserTest_Expected.bin"));
-        $this->assertEquals($expectedResult,$this->object->Parse());
+        $expectedResult = unserialize(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . "ParserTest_Expected.bin"));
+        $this->assertEquals($expectedResult, $this->object->Parse());
     }
 }

@@ -1,6 +1,7 @@
 <?php
+
 namespace Wafl\Syrup;
 
-class Validator {	
+class Validator
+{
 }
-?>

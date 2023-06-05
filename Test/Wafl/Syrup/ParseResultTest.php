@@ -1,4 +1,5 @@
 <?php
+
 namespace Wafl\Syrup;
 
 /**
@@ -6,85 +7,85 @@ namespace Wafl\Syrup;
  */
 class ParseResultTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var ParseResult
-     */
-    protected $object;
+  /**
+   * @var ParseResult
+   */
+  protected $object;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     */
-    protected function setUp()
-    {
-		$this->object = new ParseResult(array(1,2,3),1,2,3,4,"test");
-    }
+  /**
+   * Sets up the fixture, for example, opens a network connection.
+   * This method is called before a test is executed.
+   */
+  protected function setUp()
+  {
+    $this->object = new ParseResult(array(1, 2, 3), 1, 2, 3, 4, "test");
+  }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
+  /**
+   * Tears down the fixture, for example, closes a network connection.
+   * This method is called after a test is executed.
+   */
+  protected function tearDown()
+  {
+  }
 
-    /**
-     * @covers Wafl\Syrup\ParseResult::Get_ResultArray
-     * @todo   Implement testGet_ResultArray().
-     */
-    public function testGet_ResultArray()
-    {
-        $this->assertEquals($this->object->Get_ResultArray(),array(1,2,3));
-    }
+  /**
+   * @covers Wafl\Syrup\ParseResult::Get_ResultArray
+   * @todo   Implement testGet_ResultArray().
+   */
+  public function testGet_ResultArray()
+  {
+    $this->assertEquals($this->object->Get_ResultArray(), array(1, 2, 3));
+  }
 
-    /**
-     * @covers Wafl\Syrup\ParseResult::Get_EndingCursorDepth
-     * @todo   Implement testGet_EndingCursorDepth().
-     */
-    public function testGet_EndingCursorDepth()
-    {
-       $this->assertEquals($this->object->Get_EndingCursorDepth(),1);
-    }
+  /**
+   * @covers Wafl\Syrup\ParseResult::Get_EndingCursorDepth
+   * @todo   Implement testGet_EndingCursorDepth().
+   */
+  public function testGet_EndingCursorDepth()
+  {
+    $this->assertEquals($this->object->Get_EndingCursorDepth(), 1);
+  }
 
-    /**
-     * @covers Wafl\Syrup\ParseResult::Get_EndingCursorLine
-     * @todo   Implement testGet_EndingCursorLine().
-     */
-    public function testGet_EndingCursorLine()
-    {
-       $this->assertEquals($this->object->Get_EndingCursorLine(),2);
-    }
+  /**
+   * @covers Wafl\Syrup\ParseResult::Get_EndingCursorLine
+   * @todo   Implement testGet_EndingCursorLine().
+   */
+  public function testGet_EndingCursorLine()
+  {
+    $this->assertEquals($this->object->Get_EndingCursorLine(), 2);
+  }
 
-    /**
-     * @covers Wafl\Syrup\ParseResult::Get_EndingCursorPosition
-     * @todo   Implement testGet_EndingCursorPosition().
-     */
-    public function testGet_EndingCursorPosition()
-    {
-       $this->assertEquals($this->object->Get_EndingCursorPosition(),3);
-    }
+  /**
+   * @covers Wafl\Syrup\ParseResult::Get_EndingCursorPosition
+   * @todo   Implement testGet_EndingCursorPosition().
+   */
+  public function testGet_EndingCursorPosition()
+  {
+    $this->assertEquals($this->object->Get_EndingCursorPosition(), 3);
+  }
 
-    /**
-     * @covers Wafl\Syrup\ParseResult::Get_EndingHeadingDepth
-     * @todo   Implement testGet_EndingHeadingDepth().
-     */
-    public function testGet_EndingHeadingDepth()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+  /**
+   * @covers Wafl\Syrup\ParseResult::Get_EndingHeadingDepth
+   * @todo   Implement testGet_EndingHeadingDepth().
+   */
+  public function testGet_EndingHeadingDepth()
+  {
+    // Remove the following lines when you implement this test.
+    $this->markTestIncomplete(
+      'This test has not been implemented yet.'
+    );
+  }
 
-    /**
-     * @covers Wafl\Syrup\ParseResult::Get_ElementString
-     * @todo   Implement testGet_ElementString().
-     */
-    public function testGet_ElementString()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+  /**
+   * @covers Wafl\Syrup\ParseResult::Get_ElementString
+   * @todo   Implement testGet_ElementString().
+   */
+  public function testGet_ElementString()
+  {
+    // Remove the following lines when you implement this test.
+    $this->markTestIncomplete(
+      'This test has not been implemented yet.'
+    );
+  }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Wafl\Syrup;
 
 /**
@@ -6,61 +7,61 @@ namespace Wafl\Syrup;
  */
 class UtilsTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var Utils
-     */
-    protected $object;
+  /**
+   * @var Utils
+   */
+  protected $object;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     */
-    protected function setUp()
-    {
-		$this->object = new Utils();
-    }
+  /**
+   * Sets up the fixture, for example, opens a network connection.
+   * This method is called before a test is executed.
+   */
+  protected function setUp()
+  {
+    $this->object = new Utils();
+  }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
+  /**
+   * Tears down the fixture, for example, closes a network connection.
+   * This method is called after a test is executed.
+   */
+  protected function tearDown()
+  {
+  }
 
-    /**
-     * @covers Wafl\Syrup\Utils::ParseString
-     * @todo   Implement testParseString().
-     */
-    public function testParseString()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+  /**
+   * @covers Wafl\Syrup\Utils::ParseString
+   * @todo   Implement testParseString().
+   */
+  public function testParseString()
+  {
+    // Remove the following lines when you implement this test.
+    $this->markTestIncomplete(
+      'This test has not been implemented yet.'
+    );
+  }
 
-    /**
-     * @covers Wafl\Syrup\Utils::ParseFile
-     * @todo   Implement testParseFile().
-     */
-    public function testParseFile()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+  /**
+   * @covers Wafl\Syrup\Utils::ParseFile
+   * @todo   Implement testParseFile().
+   */
+  public function testParseFile()
+  {
+    // Remove the following lines when you implement this test.
+    $this->markTestIncomplete(
+      'This test has not been implemented yet.'
+    );
+  }
 
-    /**
-     * @covers Wafl\Syrup\Utils::ParseFileAsArray
-     * @todo   Implement testParseFileAsArray().
-     */
-    public function testParseFileAsArray()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+  /**
+   * @covers Wafl\Syrup\Utils::ParseFileAsArray
+   * @todo   Implement testParseFileAsArray().
+   */
+  public function testParseFileAsArray()
+  {
+    // Remove the following lines when you implement this test.
+    $this->markTestIncomplete(
+      'This test has not been implemented yet.'
+    );
+  }
 }
