@@ -9,11 +9,13 @@ Demo App
 -----------
 There is a demo app in Demo/ that can be ran by installing on a PHP server, or alternately using Docker.
 
-Docker Image:
+#Docker Image#
 In this repo's root folder, run the following to create an image for the Demo app:
+
 `docker build -t syrup-parser -f ./Dockerfile-demoapp .`
 
 Then run this command create and run a container from that image:
+
 `docker run --env=APACHE_DOCUMENT_ROOT=/var/www/html/Demo --workdir=/var/www/html -p 8181:80 -d syrup-parser:latest`
 (In Docker Desktop you can press the run button next to the image. Map port 8181 or a port of your choosing to port 80)
 
